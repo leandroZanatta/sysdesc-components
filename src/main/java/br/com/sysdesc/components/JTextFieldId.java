@@ -2,7 +2,7 @@ package br.com.sysdesc.components;
 
 import javax.swing.JTextField;
 
-import br.com.sysdesc.components.documents.LongDocumento;
+import br.com.sysdesc.components.documents.LongDocument;
 
 public class JTextFieldId extends JTextField {
 
@@ -13,7 +13,7 @@ public class JTextFieldId extends JTextField {
 
 		setEditable(Boolean.FALSE);
 
-		setDocument(new LongDocumento(0));
+		setDocument(new LongDocument(0));
 	}
 
 	public Long getValue() {

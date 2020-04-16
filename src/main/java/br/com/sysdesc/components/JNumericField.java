@@ -2,7 +2,7 @@ package br.com.sysdesc.components;
 
 import javax.swing.JTextField;
 
-import br.com.sysdesc.components.documents.LongDocumento;
+import br.com.sysdesc.components.documents.LongDocument;
 
 public class JNumericField extends JTextField {
 
@@ -14,7 +14,7 @@ public class JNumericField extends JTextField {
 
 	public JNumericField(int limiteCampo) {
 		super();
-		setDocument(new LongDocumento(limiteCampo));
+		setDocument(new LongDocument(limiteCampo));
 	}
 
 	public Long getValue() {
