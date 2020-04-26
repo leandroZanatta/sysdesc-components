@@ -4,6 +4,6 @@ import java.util.EventListener;
 
 public interface ChangeListener<T> extends EventListener {
 
-	public void valueChanged(T newValue, T oldValue);
+    public void valueChanged(T value);
 
 }
