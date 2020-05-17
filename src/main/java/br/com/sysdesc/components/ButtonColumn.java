@@ -8,14 +8,13 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JTable;
-import javax.swing.UIManager;
 import javax.swing.event.EventListenerList;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
-import br.com.sysdesc.components.listeners.ButtonCollumnActionListener;
+import br.com.sysdesc.components.listeners.CollumnActionListener;
 
 public class ButtonColumn extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener {
 
@@ -66,7 +65,7 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
             renderButton.setBackground(table.getSelectionBackground());
         } else {
             renderButton.setForeground(table.getForeground());
-            renderButton.setBackground(UIManager.getColor("Button.background"));
+            renderButton.setBackground(table.getBackground());
         }
 
         renderButton.setText(text);
@@ -95,9 +94,9 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         ((AbstractTableModel) table.getModel()).fireTableDataChanged();
     }
 
-    public void addButtonListener(ButtonCollumnActionListener actionListener) {
+    public void addButtonListener(CollumnActionListener actionListener) {
 
-        buttonListener.add(ButtonCollumnActionListener.class, actionListener);
+        buttonListener.add(CollumnActionListener.class, actionListener);
     }
 
     private void fireButtonListener(int row) {
@@ -106,9 +105,9 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
 
         for (int i = 0; i < listeners.length; i = i + 2) {
 
-            if (listeners[i] == ButtonCollumnActionListener.class) {
+            if (listeners[i] == CollumnActionListener.class) {
 
-                ((ButtonCollumnActionListener) listeners[i + 1]).buttonClicked(row);
+                ((CollumnActionListener) listeners[i + 1]).buttonClicked(row);
             }
         }
     }
