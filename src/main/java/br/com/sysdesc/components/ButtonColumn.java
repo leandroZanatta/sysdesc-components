@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.AbstractCellEditor;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.UIManager;
@@ -18,86 +19,97 @@ import br.com.sysdesc.components.listeners.ButtonCollumnActionListener;
 
 public class ButtonColumn extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private JTable table;
-	private JButton renderButton;
-	private JButton editButton;
-	private String text = "...";
-	protected EventListenerList buttonListener = new EventListenerList();
+    private JTable table;
+    private JButton renderButton;
+    private JButton editButton;
+    private String text;
+    protected EventListenerList buttonListener = new EventListenerList();
 
-	public ButtonColumn(JTable table, int column) {
-		super();
+    public ButtonColumn(JTable table, int column) {
+        this(table, column, "...");
+    }
 
-		this.table = table;
+    public ButtonColumn(JTable table, int column, String text) {
+        this(table, column, text, null);
+    }
 
-		initComponents(column);
-	}
+    public ButtonColumn(JTable table, int column, String text, Icon icon) {
+        super();
 
-	private void initComponents(int column) {
-		renderButton = new JButton();
+        this.text = text;
 
-		editButton = new JButton();
-		editButton.setFocusPainted(false);
-		editButton.addActionListener(this);
+        this.table = table;
 
-		TableColumnModel columnModel = table.getColumnModel();
-		columnModel.getColumn(column).setCellRenderer(this);
-		columnModel.getColumn(column).setCellEditor(this);
-	}
+        initComponents(column, icon);
+    }
 
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
+    private void initComponents(int column, Icon icon) {
+        renderButton = new JButton(this.text);
+        renderButton.setIcon(icon);
 
-		if (isSelected) {
-			renderButton.setForeground(table.getSelectionForeground());
-			renderButton.setBackground(table.getSelectionBackground());
-		} else {
-			renderButton.setForeground(table.getForeground());
-			renderButton.setBackground(UIManager.getColor("Button.background"));
-		}
+        editButton = new JButton(this.text);
+        editButton.setIcon(icon);
+        editButton.setFocusPainted(false);
+        editButton.addActionListener(this);
 
-		renderButton.setText(text);
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(column).setCellRenderer(this);
+        columnModel.getColumn(column).setCellEditor(this);
+    }
 
-		return renderButton;
-	}
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        if (isSelected) {
+            renderButton.setForeground(table.getSelectionForeground());
+            renderButton.setBackground(table.getSelectionBackground());
+        } else {
+            renderButton.setForeground(table.getForeground());
+            renderButton.setBackground(UIManager.getColor("Button.background"));
+        }
 
-		editButton.setText(text);
+        renderButton.setText(text);
 
-		return editButton;
-	}
+        return renderButton;
+    }
 
-	public Object getCellEditorValue() {
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 
-		return text;
-	}
+        editButton.setText(text);
 
-	public void actionPerformed(ActionEvent e) {
+        return editButton;
+    }
 
-		fireEditingStopped();
+    public Object getCellEditorValue() {
 
-		fireButtonListener(table.getSelectedRow());
+        return text;
+    }
 
-		((AbstractTableModel) table.getModel()).fireTableDataChanged();
-	}
+    public void actionPerformed(ActionEvent e) {
 
-	public void addButtonListener(ButtonCollumnActionListener actionListener) {
+        fireEditingStopped();
 
-		buttonListener.add(ButtonCollumnActionListener.class, actionListener);
-	}
+        fireButtonListener(table.getSelectedRow());
 
-	private void fireButtonListener(int row) {
+        ((AbstractTableModel) table.getModel()).fireTableDataChanged();
+    }
 
-		Object[] listeners = buttonListener.getListenerList();
+    public void addButtonListener(ButtonCollumnActionListener actionListener) {
 
-		for (int i = 0; i < listeners.length; i = i + 2) {
+        buttonListener.add(ButtonCollumnActionListener.class, actionListener);
+    }
 
-			if (listeners[i] == ButtonCollumnActionListener.class) {
+    private void fireButtonListener(int row) {
 
-				((ButtonCollumnActionListener) listeners[i + 1]).buttonClicked(row);
-			}
-		}
-	}
+        Object[] listeners = buttonListener.getListenerList();
+
+        for (int i = 0; i < listeners.length; i = i + 2) {
+
+            if (listeners[i] == ButtonCollumnActionListener.class) {
+
+                ((ButtonCollumnActionListener) listeners[i + 1]).buttonClicked(row);
+            }
+        }
+    }
 }
