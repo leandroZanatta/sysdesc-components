@@ -8,5 +8,7 @@ public abstract class AbstractInternalFrameTable extends AbstractTableModel {
 
 	public abstract void clear();
 
-	public abstract void setEnabled(Boolean enabled);
+	public void setEnabled(Boolean enabled) {
+
+	};
 }
