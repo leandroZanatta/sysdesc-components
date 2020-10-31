@@ -87,7 +87,15 @@ public class JMoneyField extends JFormattedTextField {
 
 				super.remove(0, getLength());
 
-				super.insertString(0, formatar((original + str).replaceAll("[^0-9]", "")), null);
+				String contatenado = original + str;
+
+				String sinal = "";
+
+				if (contatenado.contains("-") && !contatenado.contains("+") && !contatenado.equals("-0,0") && !contatenado.equals("0,00-")) {
+					sinal = "-";
+				}
+
+				super.insertString(0, (sinal + formatar(contatenado.replaceAll("[^0-9]", ""))), null);
 			}
 
 		}
