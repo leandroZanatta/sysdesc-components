@@ -6,16 +6,20 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 
 import javax.swing.JFormattedTextField;
+import javax.swing.event.EventListenerList;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import javax.swing.text.SimpleAttributeSet;
+
+import br.com.sysdesc.components.listeners.ChangeListener;
 
 public class JMoneyField extends JFormattedTextField {
 
 	private static final long serialVersionUID = -5712106034509737967L;
 	private static final SimpleAttributeSet nullAttribute = new SimpleAttributeSet();
 	private NumberFormat numberFormat = NumberFormat.getNumberInstance();
+	protected EventListenerList buttonListener = new EventListenerList();
 	private int casasDecimais;
 
 	public JMoneyField() {
@@ -32,6 +36,24 @@ public class JMoneyField extends JFormattedTextField {
 
 		this.setDocument(new MoneyFieldDocument());
 		this.addFocusListener(new MoneyFieldFocusListener());
+		this.addFocusListener(new FocusAdapter() {
+
+			private BigDecimal value;
+
+			@Override
+			public void focusGained(FocusEvent e) {
+
+				value = getValue();
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+
+				if (getValue().compareTo(value) != 0) {
+					fireChangeListener();
+				}
+			}
+		});
 		this.setText("0");
 
 		this.addCaretListener(e -> {
@@ -42,11 +64,29 @@ public class JMoneyField extends JFormattedTextField {
 
 	}
 
+	protected void fireChangeListener() {
+
+		Object[] listeners = buttonListener.getListenerList();
+
+		for (int i = 0; i < listeners.length; i = i + 2) {
+
+			if (listeners[i] == ChangeListener.class) {
+
+				((ChangeListener) listeners[i + 1]).valueChanged(getValue());
+			}
+		}
+	}
+
 	public void setCasasDecimais(int casasDecimais) {
 		this.casasDecimais = casasDecimais;
 
 		numberFormat.setMaximumFractionDigits(casasDecimais);
 		numberFormat.setMinimumFractionDigits(casasDecimais);
+	}
+
+	public void addChangeValue(ChangeListener<BigDecimal> changeListener) {
+
+		buttonListener.add(ChangeListener.class, changeListener);
 	}
 
 	@Override
